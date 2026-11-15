@@ -4,6 +4,6 @@
     <string name="title_activity_main">쏙브레인</string>
     <string name="package_name">com.ssokcompany.ssokbrain</string>
     <string name="custom_url_scheme">com.ssokcompany.ssokbrain</string>
-    <!-- 구글이 공개한 테스트용 AdMob 앱 ID. 출시 전에 실제 앱 ID로 바꿉니다. -->
-    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!-- 쏙컴퍼니 AdMob 앱 ID (쏙브레인 Android) -->
+    <string name="admob_app_id">ca-app-pub-8529047857122990~2247505255</string>
 </resources>

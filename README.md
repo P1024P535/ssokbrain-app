@@ -23,10 +23,7 @@
 
 | 무엇 | 어디 | 지금 값 |
 | --- | --- | --- |
-| AdMob 앱 ID | `android/app/src/main/res/values/strings.xml` 의 `admob_app_id` | 구글 테스트용 ID |
-| 보상형 광고 단위 ID | `src/config.js` 의 `ads.reward` | 구글 테스트용 ID |
-| 전면 광고 단위 ID | `src/config.js` 의 `ads.inter` | 구글 테스트용 ID |
-| 테스트 광고 여부 | `src/config.js` 의 `testAds` | `true` (출시 때 `false`) |
+| AdMob 앱 ID, 광고 단위 ID | `strings.xml`, `src/config.js` | 쏙컴퍼니 실제 ID (테스트 파일은 자동으로 테스트 광고, 출시 파일만 실제 광고) |
 | 앱 고유 이름(패키지) | `capacitor.config.json`, `android/app/build.gradle` | `com.ssokcompany.ssokbrain` (출시 후 변경 불가) |
 | 버전 | `android/app/build.gradle` 의 `versionCode`, `versionName` | 1, 1.0.0 (업데이트마다 `versionCode` +1) |
 

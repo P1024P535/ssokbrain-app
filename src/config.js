@@ -1,11 +1,13 @@
 // 쏙브레인 앱 설정. 출시 전에 아래 값을 실제 값으로 바꿉니다.
 export default {
-  // true면 구글의 테스트 광고만 나옵니다. 출시 빌드에서는 false로 바꿉니다.
-  testAds: true,
+  // 테스트 파일(APK)에서는 true라서 구글의 테스트 광고만 나오고,
+  // 출시 파일(AAB)을 만들 때만 false가 되어 실제 광고가 나옵니다. (scripts/build.mjs 가 정합니다)
+  // eslint-disable-next-line no-undef
+  testAds: __TEST_ADS__,
   ads: {
-    // AdMob 광고 단위 ID. 지금 값은 구글이 공개한 테스트용 ID입니다.
-    reward: 'ca-app-pub-3940256099942544/5224354917',
-    inter: 'ca-app-pub-3940256099942544/1033173712',
+    // 쏙컴퍼니 AdMob 광고 단위 ID
+    reward: 'ca-app-pub-8529047857122990/5995178575', // 코인 보상 (보상형)
+    inter: 'ca-app-pub-8529047857122990/9672513794', // 문제 사이 (전면)
   },
   // 게임 안 상품 ID -> 구글 플레이 콘솔에 등록할 상품 ID
   products: {

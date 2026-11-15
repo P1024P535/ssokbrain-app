@@ -38,6 +38,9 @@ await build({
   format: 'iife',
   target: 'es2020',
   minify: true,
+  // 출시 빌드(SSOK_RELEASE=1)에서만 실제 광고를 씁니다.
+  define: { __TEST_ADS__: process.env.SSOK_RELEASE ? 'false' : 'true' },
   outfile: path.join(www, 'native.js'),
 });
+console.log(process.env.SSOK_RELEASE ? 'RELEASE build: real ads' : 'test build: test ads');
 console.log('www built:', fs.readdirSync(www).join(', '));
