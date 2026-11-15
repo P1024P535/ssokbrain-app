@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
@@ -31,6 +34,13 @@ jobs:
         with:
           name: ssokbrain-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish test APK to Releases (폰에서 바로 내려받는 링크)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk ssokbrain-test.apk
+          gh release delete test-latest --yes --cleanup-tag || true
+          gh release create test-latest ssokbrain-test.apk --title "테스트용 설치 파일" --notes "가장 최근 빌드의 테스트용 APK입니다. 광고는 테스트 광고가 나오고, 결제는 플레이 콘솔에 상품을 등록하기 전까지 동작하지 않습니다." --prerelease --target "$GITHUB_SHA"
 
       # 출시용 AAB: 서명 키를 Secrets 에 넣은 뒤에만 실행됩니다.
       - name: Decode keystore

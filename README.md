@@ -16,7 +16,7 @@
 ## 앱 파일 받는 법
 
 1. 이 저장소의 `main` 브랜치에 올리면 GitHub Actions가 자동으로 빌드합니다.
-2. 저장소의 Actions 탭 > 가장 최근 실행 > Artifacts 에서 `ssokbrain-debug-apk`를 내려받습니다.
+2. 저장소의 Releases > "테스트용 설치 파일"에서 `ssokbrain-test.apk`를 내려받습니다.
 3. 안드로이드 폰에서 그 APK를 열어 설치합니다. (테스트용이라 "출처를 알 수 없는 앱" 허용이 필요합니다.)
 
 ## 출시 전에 바꿔야 하는 값
