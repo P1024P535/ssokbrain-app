@@ -3,3 +3,4 @@ www/
 *.keystore
 *.jks
 .DS_Store
+!android/app/debug.keystore

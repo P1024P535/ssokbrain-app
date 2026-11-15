@@ -7,7 +7,7 @@ android {
         applicationId "com.ssokcompany.ssokbrain"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 3
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -17,6 +17,13 @@ android {
         }
     }
     signingConfigs {
+        debug {
+            // 테스트 빌드용 고정 키. 빌드할 때마다 서명이 바뀌지 않아야 구글 로그인이 동작합니다.
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         release {
             // 출시용 서명 키. 값은 GitHub 저장소의 Secrets 에서 환경 변수로 들어옵니다.
             if (System.getenv("SSOK_KEYSTORE_FILE")) {
