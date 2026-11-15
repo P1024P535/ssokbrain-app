@@ -12,5 +12,7 @@ ext {
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'
+    // 구글 로그인 SDK 포함 (@capacitor-firebase/authentication)
+    rgcfaIncludeGoogle = true
     cordovaAndroidVersion = '14.0.1'
 }

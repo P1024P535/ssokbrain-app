@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "954420533943",
+    "project_id": "ssokbrain",
+    "storage_bucket": "ssokbrain.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954420533943:android:2268944f0fadeb290c0b32",
+        "android_client_info": {
+          "package_name": "com.ssokcompany.ssokbrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "954420533943-109q4ii2ejgd49lh2icqlsk16jtgiaqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVWnOPhJCIPPmKW-EPZwpOI5WAtbbgniA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "954420533943-109q4ii2ejgd49lh2icqlsk16jtgiaqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

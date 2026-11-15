@@ -2,5 +2,15 @@
   "appId": "com.ssokcompany.ssokbrain",
   "appName": "쏙브레인",
   "webDir": "www",
-  "android": { "backgroundColor": "#22382f" }
+  "android": {
+    "backgroundColor": "#22382f"
+  },
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": [
+        "google.com"
+      ]
+    }
+  }
 }

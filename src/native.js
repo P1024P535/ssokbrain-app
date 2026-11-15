@@ -1,14 +1,14 @@
 // 게임(www/index.html)과 기기 기능(광고, 결제, 뒤로 가기)을 잇는 다리.
 // 앱 안에서만 window.SsokNative 를 만들고, 웹에서는 아무 일도 하지 않아 게임이 테스트 모드로 동작합니다.
 // 각 기능의 상태는 window.ssokDiag 에 적어 두고, 게임의 설정 화면 맨 아래에 표시됩니다.
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { App } from '@capacitor/app';
 import { AdMob, RewardAdPluginEvents, InterstitialAdPluginEvents } from '@capacitor-community/admob';
 import { store, ProductType, Platform } from 'capacitor-plugin-cdv-purchase';
 import CFG from './config.js';
 
 if (Capacitor.isNativePlatform()) {
-  const diag = (window.ssokDiag = { native: Capacitor.getPlatform(), ads: 'starting', store: 'starting', lastAd: '-' });
+  const diag = (window.ssokDiag = { native: Capacitor.getPlatform(), ads: 'starting', store: 'starting', auth: 'ready', lastAd: '-' });
   const msg = (e) => String((e && (e.message || e.code)) || e).slice(0, 80);
   // 기기 기능이 응답하지 않을 때 게임이 멈추지 않도록, 정해진 시간이 지나면 실패로 처리합니다.
   const timeout = (p, ms, label) =>
@@ -131,5 +131,32 @@ if (Capacitor.isNativePlatform()) {
     if (!(window.ssokBack && window.ssokBack())) App.exitApp();
   });
 
-  window.SsokNative = { ad, buy, price, restore };
+  /* ---------- 구글 로그인 (Firebase Authentication) ---------- */
+  const FirebaseAuthentication = registerPlugin('FirebaseAuthentication');
+  const toUser = (u) => (u ? { uid: u.uid, name: u.displayName || '', email: u.email || '' } : null);
+  async function signIn() {
+    try {
+      const r = await FirebaseAuthentication.signInWithGoogle();
+      diag.auth = 'signed in';
+      return toUser(r && r.user);
+    } catch (e) {
+      diag.auth = 'sign-in failed: ' + msg(e);
+      throw e;
+    }
+  }
+  async function signOut() {
+    await FirebaseAuthentication.signOut();
+    diag.auth = 'signed out';
+  }
+  async function deleteAccount() {
+    try {
+      await FirebaseAuthentication.deleteUser();
+      diag.auth = 'deleted';
+    } catch (e) {
+      diag.auth = 'delete failed: ' + msg(e);
+      throw e;
+    }
+  }
+
+  window.SsokNative = { ad, buy, price, restore, signIn, signOut, deleteAccount };
 }
