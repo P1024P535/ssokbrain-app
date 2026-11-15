@@ -60,6 +60,14 @@ jobs:
         run: |
           cd .. && SSOK_RELEASE=1 npm run sync && cd android
           ./gradlew bundleRelease --no-daemon
+      - name: Publish release AAB to Releases (플레이 콘솔에 올리는 파일)
+        if: ${{ env.KEYSTORE_B64 != '' }}
+        env:
+          KEYSTORE_B64: ${{ secrets.SSOK_KEYSTORE_BASE64 }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/bundle/release/app-release.aab ssokbrain-release.aab
+          gh release upload test-latest ssokbrain-release.aab --clobber
       - uses: actions/upload-artifact@v4
         if: ${{ env.KEYSTORE_B64 != '' }}
         env:
