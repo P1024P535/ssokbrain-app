@@ -58,6 +58,12 @@ jobs:
           SSOK_KEY_ALIAS: ${{ secrets.SSOK_KEY_ALIAS }}
           SSOK_KEY_PASSWORD: ${{ secrets.SSOK_KEY_PASSWORD }}
         run: |
+          # 붙여 넣을 때 섞여 들어간 빈칸, 줄바꿈, 보이지 않는 문자를 걸러냅니다.
+          clean() { printf '%s' "$1" | LC_ALL=C tr -cd '\41-\176'; }
+          export SSOK_KEYSTORE_PASSWORD="$(clean "$SSOK_KEYSTORE_PASSWORD")"
+          export SSOK_KEY_PASSWORD="$(clean "$SSOK_KEY_PASSWORD")"
+          export SSOK_KEY_ALIAS="$(clean "$SSOK_KEY_ALIAS")"
+          echo "lengths: store password ${#SSOK_KEYSTORE_PASSWORD} (expected 20), key password ${#SSOK_KEY_PASSWORD} (expected 20), alias ${#SSOK_KEY_ALIAS} (expected 9)"
           cd .. && SSOK_RELEASE=1 npm run sync && cd android
           ./gradlew bundleRelease --no-daemon
       - name: Publish release AAB to Releases (플레이 콘솔에 올리는 파일)
