@@ -16,6 +16,7 @@ if (Capacitor.isNativePlatform()) {
 
   /* ---------- 광고 ---------- */
   const loaded = { reward: null, inter: null }; // 미리 불러 둔 광고 (Promise<boolean>)
+  const ready = { reward: false, inter: false }; // 바로 보여 줄 수 있는 광고가 있는지
   const adsReady = (async () => {
     try {
       await timeout(AdMob.initialize({ initializeForTesting: CFG.testAds }), 10000, 'init');
@@ -36,15 +37,22 @@ if (Capacitor.isNativePlatform()) {
     const call = kind === 'reward'
       ? AdMob.prepareRewardVideoAd({ adId: CFG.ads.reward, isTesting: CFG.testAds })
       : AdMob.prepareInterstitial({ adId: CFG.ads.inter, isTesting: CFG.testAds });
+    ready[kind] = false;
     loaded[kind] = timeout(call, 20000, 'load').then(
-      () => true,
-      (e) => { diag.lastAd = kind + ' load failed: ' + msg(e); return false; },
+      () => { ready[kind] = true; return true; },
+      (e) => { diag.lastAd = kind + ' load failed: ' + msg(e); loaded[kind] = null; return false; },
     );
     return loaded[kind];
   }
   adsReady.then(() => { preload('reward'); preload('inter'); });
 
   async function ad(kind) {
+    // 문제 사이 광고는 미리 준비된 것이 없으면 기다리지 않고 바로 건너뜁니다. (게임이 멈춘 것처럼 보이지 않게)
+    if (kind === 'inter' && !ready.inter) {
+      if (!loaded.inter) adsReady.then(() => preload('inter'));
+      diag.lastAd = 'inter skipped (not ready)';
+      return false;
+    }
     await adsReady;
     const handles = [];
     const on = async (ev, fn) => handles.push(await AdMob.addListener(ev, fn));
@@ -53,6 +61,7 @@ if (Capacitor.isNativePlatform()) {
       if (!ok) ok = await preload(kind); // 한 번 더 시도
       if (!ok) return false;
       loaded[kind] = null;
+      ready[kind] = false;
       let rewarded = false;
       let closed;
       const done = new Promise((r) => (closed = r));
@@ -65,7 +74,7 @@ if (Capacitor.isNativePlatform()) {
         diag.lastAd = kind + ' show failed: ' + msg(e);
         closed();
       });
-      await timeout(done, 180000, 'show').catch(() => {});
+      await timeout(done, kind === 'reward' ? 180000 : 60000, 'show').catch(() => {});
       diag.lastAd = kind + (kind === 'reward' ? (rewarded ? ' rewarded' : ' closed early') : ' shown');
       return kind === 'reward' ? rewarded : true;
     } catch (e) {
