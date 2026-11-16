@@ -106,12 +106,16 @@ if (Capacitor.isNativePlatform()) {
   async function buy(key) {
     await storeReady;
     try {
-      const product = store.get(CFG.products[key], PLATFORM);
-      const offer = product && product.getOffer();
+      const find = () => { const p = store.get(CFG.products[key], PLATFORM); return p && p.getOffer(); };
+      let offer = find();
+      // 상품 정보가 아직 안 들어왔으면 스토어에서 한 번 더 받아 옵니다.
+      if (!offer) { try { await timeout(store.update(), 10000, 'store update'); } catch (e) { /* 아래에서 처리 */ } offer = find(); }
       if (!offer) { diag.store = 'product not found: ' + CFG.products[key]; return false; }
       const err = await store.order(offer);
-      if (err) diag.store = 'order: ' + msg(err);
-      return !err;
+      if (!err) return true;
+      diag.store = 'order: ' + msg(err);
+      // 사용자가 결제 창을 직접 닫은 경우는 실패 안내를 띄우지 않습니다.
+      return err.code === 6777006;
     } catch (e) { diag.store = 'order failed: ' + msg(e); return false; }
   }
   function price(key) {
